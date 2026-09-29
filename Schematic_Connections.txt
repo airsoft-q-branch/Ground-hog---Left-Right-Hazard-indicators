@@ -1,0 +1,197 @@
+========================================
+GROUND HOG LED INDICATOR CIRCUIT
+Schematic & Wiring Connections
+========================================
+
+POWER DISTRIBUTION
+==================
+
+    12V Battery (+)
+         |
+         +-- [30A Main Fuse]
+         |
+         +-- [Relay VCC +12V]
+         |
+         +-- [LED +12V Supply]
+
+
+    Battery (-) / GND
+         |
+         +-- [Common Ground Point]
+         |
+         +-- [Relay GND]
+         |
+         +-- [Arduino GND]
+         |
+         +-- [LED GND]
+
+
+BUCK CONVERTER (12V to 5V)
+===========================
+
+    12V Battery (+) ----+---- [30A Fuse] ---- [Buck Converter IN+]
+    Battery GND ----+---- [Buck Converter IN-]
+    
+    [Buck Converter OUT+] ---- [Arduino 5V]
+    [Buck Converter OUT-] ---- [Arduino GND]
+
+
+ARDUINO MICROCONTROLLER (Uno/Nano)
+===================================
+
+Pin Configuration:
+
+    Arduino 5V  ---- Buck Converter Output (+5V)
+    Arduino GND ---- Common Ground (Battery -)
+    
+    Arduino D2  ---- [SW1 - 10kΩ Pull-down to GND] ---- [Switch to 5V]
+    Arduino D3  ---- [SW2 - 10kΩ Pull-down to GND] ---- [Switch to 5V]
+    Arduino D4  ---- [Relay Module IN1 - Left Indicator]
+    Arduino D5  ---- [Relay Module IN2 - (Optional redundant Left)]
+    Arduino D6  ---- [Relay Module IN3 - Right Indicator]
+    Arduino D7  ---- [Relay Module IN4 - (Optional redundant Right)]
+    Arduino GND ---- [Relay Module GND]
+
+
+SWITCH CONNECTIONS
+==================
+
+SW1 (Left Indicator):
+                     
+    5V ---- [Momentary Switch] ---- [0.1µF Cap to GND] ---- [10kΩ Resistor to GND]
+                                              |
+                                        [to Arduino D2]
+
+SW2 (Right Indicator):
+
+    5V ---- [Momentary Switch] ---- [0.1µF Cap to GND] ---- [10kΩ Resistor to GND]
+                                              |
+                                        [to Arduino D3]
+
+
+RELAY MODULE (4-Channel 12V)
+=============================
+
+    Relay VCC    ---- 12V Battery (+)
+    Relay GND    ---- Battery (-) [Common Ground]
+    
+    IN1 (D4)     ---- Arduino D4  --> [1N4007 Flyback Diode] --> CH1 Coil
+    IN2 (D5)     ---- Arduino D5  --> [1N4007 Flyback Diode] --> CH2 Coil
+    IN3 (D6)     ---- Arduino D6  --> [1N4007 Flyback Diode] --> CH3 Coil
+    IN4 (D7)     ---- Arduino D7  --> [1N4007 Flyback Diode] --> CH4 Coil
+    
+    NOTE: 1N4007 Diodes connected with cathode (+) to relay coil positive,
+          anode (-) to relay coil negative (across coil terminals)
+
+
+LED INDICATOR CONNECTIONS (12V)
+===============================
+
+Configuration: Pair front + rear LEDs on same relay channel
+
+SIMPLIFIED 2-CHANNEL OPTION (Recommended):
+
+Channel 1 (Left - Relay CH1):
+    12V (+) ---- [10A Fuse] ---- Relay CH1 NO (Normally Open) Terminal
+                                          |
+                                          +---- [Front Left LED +12V]
+                                          |
+                                          +---- [Rear Left LED +12V]
+    
+    Relay CH1 COM (Common) ---- [All LED GND] ---- Battery (-)
+
+Channel 2 (Right - Relay CH2):
+    12V (+) ---- [10A Fuse] ---- Relay CH2 NO (Normally Open) Terminal
+                                          |
+                                          +---- [Front Right LED +12V]
+                                          |
+                                          +---- [Rear Right LED +12V]
+    
+    Relay CH2 COM (Common) ---- [All LED GND] ---- Battery (-)
+
+
+FULL 4-CHANNEL OPTION (Redundancy):
+
+Channel 1 (Front Left - Relay CH1):
+    12V (+) ---- [10A Fuse] ---- Relay CH1 NO ---- [Front Left LED +12V]
+    Relay CH1 COM ---- [Front Left LED GND] ---- Battery (-)
+
+Channel 2 (Rear Left - Relay CH2):
+    12V (+) ---- [10A Fuse] ---- Relay CH2 NO ---- [Rear Left LED +12V]
+    Relay CH2 COM ---- [Rear Left LED GND] ---- Battery (-)
+
+Channel 3 (Front Right - Relay CH3):
+    12V (+) ---- [10A Fuse] ---- Relay CH3 NO ---- [Front Right LED +12V]
+    Relay CH3 COM ---- [Front Right LED GND] ---- Battery (-)
+
+Channel 4 (Rear Right - Relay CH4):
+    12V (+) ---- [10A Fuse] ---- Relay CH4 NO ---- [Rear Right LED +12V]
+    Relay CH4 COM ---- [Rear Right LED GND] ---- Battery (-)
+
+
+COMPLETE BILL OF MATERIALS (BOM)
+================================
+
+Microcontroller & Logic:
+  - Arduino Uno or Arduino Nano (1x)
+  - 12V to 5V Buck Converter (1x)
+
+Relays & Switching:
+  - 4-Channel 12V Relay Module (1x) [use 2+ channels]
+  - 1N4007 Diodes (4x) [flyback protection]
+
+Passive Components:
+  - 10kΩ Resistor (2x) [switch pull-down]
+  - 0.1µF Ceramic Capacitor (2x) [switch debounce]
+
+Power Protection:
+  - 30A Automotive Fuse (1x) [main line]
+  - 10A Automotive Fuses (2-4x) [per LED pair]
+  - Fuse Holders (3-5x)
+
+Switches:
+  - Momentary Push-Button Switches (2x) [SW1, SW2]
+
+Wiring:
+  - 12 AWG Automotive Wire (red, black) - Main power lines
+  - 16 AWG Wire (colored) - Signal/control lines
+  - Butt Connectors & Spade Terminals
+  - Heat Shrink Tubing (assorted sizes)
+
+LEDs:
+  - 12V LED Indicators (4x) [Front Left, Rear Left, Front Right, Rear Right]
+    Recommended: 1.5-2A rated automotive LEDs
+
+Optional:
+  - Status LED + 220Ω Resistor [system indicator]
+  - Power Distribution Block [terminal management]
+
+
+WIRING CHECKLIST
+================
+
+[ ] Main 12V battery line fused (30A) to relay module
+[ ] Common ground point established
+[ ] Buck converter powered and outputting 5V
+[ ] Arduino powered via buck converter
+[ ] SW1 and SW2 wired with pull-down resistors and debounce caps
+[ ] Arduino pins D2, D3 connected to switches
+[ ] Arduino pins D4-D7 connected to relay inputs (via diodes)
+[ ] Relay coils protected with 1N4007 diodes
+[ ] All 4 relay channels wired to 12V supply and LEDs
+[ ] 10A fuses installed on each LED pair
+[ ] All grounds connected to common point
+[ ] Test continuity of all connections before power-up
+
+
+SAFETY CONSIDERATIONS
+====================
+
+1. Always fuse positive 12V lines (30A main, 10A per branch)
+2. Ensure all relay coils have flyback diodes (1N4007)
+3. Keep switch wiring away from high-current paths
+4. Use appropriate gauge wire for current draw
+5. Secure all connections to prevent vibration loosening
+6. Place relay module near battery for short heavy-gauge runs
+7. Test system with LEDs unpowered first
+8. Verify relay operation before operating vehicle
